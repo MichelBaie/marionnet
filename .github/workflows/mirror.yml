@@ -1,0 +1,93 @@
+name: Sync Marionnet (bzr → main)
+
+on:
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: "15 3 * * 1-5"
+
+jobs:
+  fetch-and-push:
+    name: Export from Bazaar and push to main
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: write
+
+    concurrency:
+      group: marionnet-sync-${{ github.ref }}
+      cancel-in-progress: true
+
+    env:
+      TARGET_BRANCH: main
+      UPSTREAM: lp:marionnet
+
+    steps:
+      - name: Check out target repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+          fetch-depth: 0
+
+      - name: Install Bazaar (fallback to Breezy)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v bzr >/dev/null 2>&1; then
+            sudo apt-get update
+            if sudo apt-get install -y bzr; then
+              echo "bzr installed."
+            else
+              echo "bzr unavailable, installing Breezy (brz) and setting alias bzr → brz."
+              sudo apt-get install -y brz
+              sudo update-alternatives --install /usr/bin/bzr bzr /usr/bin/brz 50
+            fi
+          fi
+          bzr --version
+
+      - name: Export a clean snapshot from Launchpad
+        id: export
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP_DIR="$(mktemp -d)"
+          echo "tmpdir=$TMP_DIR" >> "$GITHUB_OUTPUT"
+          bzr export --format=dir "$TMP_DIR" "${UPSTREAM}"
+          REVINFO="$(bzr revision-info "${UPSTREAM}" | tr -d '\r')"
+          echo "revinfo=$REVINFO" >> "$GITHUB_OUTPUT"
+
+      - name: Sync contents into the repository (preserving .github/)
+        id: sync
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          SRC="${{ steps.export.outputs.tmpdir }}"
+          rsync -a --delete \
+            --exclude ".git/" \
+            --exclude ".github/" \
+            "${SRC}/" .
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit & push if changes
+        if: steps.sync.outputs.changed == 'true'
+        shell: bash
+        env:
+          REVINFO: ${{ steps.export.outputs.revinfo }}
+        run: |
+          set -euo pipefail
+          git add -A
+          msg="Sync Marionnet (${UPSTREAM}) - ${REVINFO}"
+          git commit -m "$msg"
+          git push origin "${TARGET_BRANCH}"
+
+      - name: No changes detected
+        if: steps.sync.outputs.changed != 'true'
+        run: echo "No changes detected, the job is complete."
