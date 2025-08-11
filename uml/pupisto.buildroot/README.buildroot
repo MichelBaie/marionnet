@@ -1,0 +1,42 @@
+The compilation of buildroot may fail, depending on the git version.
+In this case, you can revert to a tested running version (May-June 2013
+or June 2014) getting a tarball from our website:
+
+#TARBALL=buildroot.2013-05.tar.xz   # May-June 2013
+TARBALL=buildroot.2014-06.tar.xz    # June 2014
+
+wget http://www.marionnet.org/downloads/buildroot/$TARBALL
+rm -rf _build.buildroot
+tar xJf $TARBALL
+make guignol
+
+Note also that `make guignol' may fail for a reason that I don't understand
+currently (and I have no time to understand). But forcing the command to
+restart in the same directory, the error disappears and the virtual machine
+is correctly built:
+
+OPTIONS='-c _build.guignol-with-linux-3.2.60.2014-06-30.16h14/' make guignol
+
+or directly something like:
+
+./pupisto.buildroot.sh --kernel 3.2.60 --router --name guignol -c _build.guignol-with-linux-3.2.60.2014-06-30.16h14/
+
+Note that the same error appears with kernel 3.2.64:
+---
+>>> linux-headers 3.2.64 Configuring
+(cd /homes/unison/jean/DEVEL/repos/marionnet/uml/pupisto.buildroot/_build.guignol-with-linux-3.2.64.2014-11-25.16h46/buildroot/output/build/linux-headers-3.2.64; PATH="/homes/unison/jean/DEVEL/repo
+make[1]: entrant dans le répertoire « /homes/unison/jean/DEVEL/repos/marionnet/uml/pupisto.buildroot/_build.guignol-with-linux-3.2.64.2014-11-25.16h46/buildroot/output/build/linux-headers-3.2.64 
+  CHK     include/linux/version.h
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  arch/x86/tools/relocs
+  UPD     include/linux/version.h
+/bin/sh: 1: scripts/basic/fixdep: not found
+make[2]: *** [arch/x86/tools/relocs] Erreur 127
+make[1]: *** [archscripts] Erreur 2
+make[1]: *** Attente des tâches non terminées....
+make[1]: quittant le répertoire « /homes/unison/jean/DEVEL/repos/marionnet/uml/pupisto.buildroot/_build.guignol-with-linux-3.2.64.2014-11-25.16h46/buildroot/output/build/linux-headers-3.2.64 »
+make: *** [/homes/unison/jean/DEVEL/repos/marionnet/uml/pupisto.buildroot/_build.guignol-with-linux-3.2.64.2014-11-25.16h46/buildroot/output/build/linux-headers-3.2.64/.stamp_configured] Erreur 2
+make: quittant le répertoire « /homes/unison/jean/DEVEL/repos/marionnet/uml/pupisto.buildroot/_build.guignol-with-linux-3.2.64.2014-11-25.16h46/buildroot »
+Exiting because of an unexpected error in line 152
+---
+and disappears in the same way re-launching the script in the same directory.

@@ -1,0 +1,76 @@
+This file is part of Marionnet, a virtual network laboratory.
+Copyright (C) 2008  Luca Saiu
+Copyright (C) 2008 2013  Jean-Vincent Loddo
+Copyright (C) 2008 2013  Université Paris 13
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Images in this directory are mostly:
+
+0) GTK+ stock icons.
+
+1) original, in which case they are released by Jean-Vincent Loddo and
+Luca Saiu under the GPL version 2 or later,
+
+Exceptions:
+
+2) ico.info.orig.png, ico.warning.orig.png and ico.error.orig.png
+are taken from the GNOME Amaranth theme (released under the Artistic
+license, a copy of which is included in this directory, by their
+authors).
+
+3) ico.question-2.orig.png is taken from the Gnome icons, released
+by its authors under the GNU GPL version 2; converted by Luca Saiu
+in 2008.
+
+4) ico.splines.png is derived from the icon named
+"Actions-format-stroke-color-icon" taken from the Oxygen Icons and
+released by its authors, the "Oxygen Team", under the GNU LGPL v3
+(a copy of which is included in this directory); the icon was modified
+by Jean-Vincent Loddo in 2013.
+http://www.oxygen-icons.org/
+Original file (24x24) downloaded from:
+http://www.iconarchive.com/show/oxygen-icons-by-oxygen-icons.org/Actions-format-stroke-color-icon.html
+
+5) ico.invert-arcs.png is derived from the icon named
+"Actions-transform-rotate-icon" taken from the Oxygen Icons and
+released by its authors, the "Oxygen Team", under the GNU LGPL v3;
+the icon was modified by Jean-Vincent Loddo in 2013 (simply desatured).
+http://www.oxygen-icons.org/
+Original file (24x24) downloaded from:
+http://www.iconarchive.com/show/oxygen-icons-by-oxygen-icons.org/Actions-transform-rotate-icon.html
+
+6) ico.action.zoom.in.png is the icon named
+"Actions-zoom-in-icon" taken from the "Snowish Icons" and
+released by its author "Saki" under the GNU LGPL v3.
+http://www.oxygen-icons.org/
+Original file (24x24) downloaded from:
+http://www.iconarchive.com/show/snowish-icons-by-saki/Actions-zoom-in-icon.html
+
+7) ico.action.zoom.out.png is the icon named
+"Actions-zoom-out-icon" taken from the "Snowish Icons" and
+released by its author "Saki" under the GNU LGPL v3.
+http://www.oxygen-icons.org/
+Original file (24x24) downloaded from:
+http://www.iconarchive.com/show/snowish-icons-by-saki/Actions-zoom-out-icon.html
+
+8) ico.snapshot.42x42.png is the icon named "camera"
+released by its author "hatalar205" under License CC-Zero 1.0
+https://openclipart.org/detail/170939/camera
+Original file (svg) downloaded from:
+https://openclipart.org/download/170939/1340823706.svg
+convert -resize 42x42 1340823706.svg ico.snapshot.42x42.png
+mv 1340823706.svg ico.snapshot.svg
+
